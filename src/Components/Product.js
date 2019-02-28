@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {ProductWrapper} from './Styled'
 import {Link} from 'react-router-dom'
 import {ProductConsumer} from '../store'
+import PropTypes from 'prop-types'
 
 class Product extends Component {
 
@@ -24,9 +25,9 @@ class Product extends Component {
                             onClick={() => {}}
                         >
                             {inCart?
-                            ( <p className="text-capitalize mb-0" disabled>in Cart</p> )
-                            :
-                            ( <i className="fas fa-cart-plus" /> )
+                                ( <p className="text-capitalize mb-0" disabled>in Cart</p> )
+                                :
+                                ( <i className="fas fa-cart-plus" /> )
                             }
                         </button>
                     </div>
@@ -42,5 +43,13 @@ class Product extends Component {
         );
     }
 }
-
+Product.propTypes = {
+    product:PropTypes.shape({
+        id:PropTypes.number,
+        img:PropTypes.string,
+        title:PropTypes.string,
+        price:PropTypes.number,
+        inCart:PropTypes.bool
+    }).isRequired
+}
 export default Product;
