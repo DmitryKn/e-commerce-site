@@ -19,10 +19,7 @@ class ProductList extends Component {
                                 return (
                                     <Product
                                         key={elem.id}
-                                        title={elem.title}
-                                        image={elem.image}
-                                        price={elem.price}
-                                        company={elem.company}
+                                        product={elem}
                                         handleDetail={elem.handleDetail}
                                     />
                                 )
