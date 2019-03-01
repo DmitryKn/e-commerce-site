@@ -14,7 +14,6 @@ class ProductList extends Component {
                             title='products'
                         />
                         <div className="row">
-                            
                             <ProductConsumer>
                                 {(data) => {
                                     return data.products.map(elem => {

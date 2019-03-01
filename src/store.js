@@ -5,13 +5,16 @@ const ProductContext = React.createContext(); //Provider //Consumer
 
 class ProductProvider extends Component {
     state={
-        products: [],   //Здесь лучше не вставлять products: storeProducts
-        detailProduct: detailProduct
+        products: [],   //better not to do - products: storeProducts
+        detailProduct: detailProduct,
+        cart:[],
+        modalOpen: false,
+        modalProduct: detailProduct
     }
-    componentDidMount() { //запуск функции фикса
+    componentDidMount() { //run fix
         this.setProducts();
     }
-    setProducts = () => { //фикс для починки того, что мы посылаем данные через пропсы. Мы не копируем их, а постоянно обновляем их
+    setProducts = () => { //fix if we need to change default state.data
         let tempProducts = [];
         storeProducts.forEach(item => {
             const singleItem = {...item};
@@ -21,11 +24,47 @@ class ProductProvider extends Component {
             return {products: tempProducts}
         })
     }
-    handleDetail = () => {
-        console.log('detail');
+
+    getItem = (id) => {
+        const product = this.state.products.find(item => item.id === id);
+        return product;
     }
-    addToCart = () => {
-        console.log('cart');
+
+    handleDetail = (id) => {
+        const product = this.getItem(id);
+        this.setState(() => {
+            return {detailProduct: product}
+        })
+    }
+    addToCart = (id) => {
+        let tempProducts = [...this.state.products]; //временный массив
+        const index = tempProducts.indexOf(this.getItem(id)); //индекс=айди
+        const product = tempProducts[index]; //индекс массива
+        product.inCart = true; //меняем значение на тру
+        product.count = 1;
+        const price = product.price;
+        product.total = price;
+
+        this.setState(() => {
+            return {
+                products: tempProducts,
+                cart: [...this.state.cart, product]
+            }
+        })
+    }
+    openModal = (id) => {
+        const product = this.getItem(id);
+        this.setState(() => {
+            return {
+                modalProduct: product,
+                modalOpen: true}
+        })
+    }
+    closeModal = () => {
+        this.setState(() => {
+            return {
+                modalOpen: false}
+        })
     }
 
     render() {
@@ -33,7 +72,9 @@ class ProductProvider extends Component {
             <ProductContext.Provider value={{
                 ...this.state,
                 handleDetail: this.handleDetail,
-                addToCart: this.addToCart
+                addToCart: this.addToCart,
+                openModal: this.openModal,
+                closeModal: this.closeModal
             }}>
                 {this.props.children}
             </ProductContext.Provider>
